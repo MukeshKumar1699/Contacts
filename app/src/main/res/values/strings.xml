@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="searchContact"><![CDATA[Search contacts & places]]></string>
+    <string name="first_name">First Name</string>
+    <string name="namePrefix">Name Prefix</string>
+    <string name="middleName">Middle Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="nameSuffix">Name Suffix</string>
+    <string name="company">Company</string>
+    <string name="add_field">Add Field</string>
+    <string name="phone">Phone</string>
+    <string name="add_emailField">Add Email</string>
+    <string name="add_phoneField">Add Phone</string>
+    <string name="moreFields">More Fields</string>
+    <string name="address">Address</string>
+    <string name="significantDate">Significant Date</string>
+    <string name="label">Label</string>
+    <string name="notes">Notes</string>
+    <string name="sip">SIP</string>
+    <string name="save">SAVE</string>
+    <string name="call">Call</string>
+    <string name="text">Text</string>
+    <string name="Video">video</string>
+
+    <string-array name="types">
+        <item>No label</item>
+        <item>Home</item>
+        <item>Work</item>
+        <item>Other</item>
+        <item>Custom</item>
+    </string-array>
+
+
+</resources>

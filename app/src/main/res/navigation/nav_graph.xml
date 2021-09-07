@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/splashFragment">
+
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.contacts.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_displayContactsListFragment"
+            app:destination="@id/displayContactsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayContactsListFragment"
+        android:name="com.example.contacts.DisplayContactsListFragment"
+        android:label="fragment_display_contacts_list"
+        tools:layout="@layout/fragment_display_contacts_list" >
+        <action
+            android:id="@+id/action_displayContactsListFragment_to_searchContactFragment"
+            app:destination="@id/searchContactFragment" />
+        <action
+            android:id="@+id/action_displayContactsListFragment_to_displayContactDetailsFragment"
+            app:destination="@id/displayContactDetailsFragment" />
+        <action
+            android:id="@+id/action_displayContactsListFragment_to_addContactFragment"
+            app:destination="@id/addContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchContactFragment"
+        android:name="com.example.contacts.SearchContactFragment"
+        android:label="fragment_search_contact"
+        tools:layout="@layout/fragment_search_contact" >
+        <action
+            android:id="@+id/action_searchContactFragment_to_displayContactDetailsFragment"
+            app:destination="@id/displayContactDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayContactDetailsFragment"
+        android:name="com.example.contacts.DisplayContactDetailsFragment"
+        android:label="fragment_display_contact_details"
+        tools:layout="@layout/fragment_display_contact_details" />
+    <fragment
+        android:id="@+id/addContactFragment"
+        android:name="com.example.contacts.AddContactFragment"
+        android:label="fragment_add_contact"
+        tools:layout="@layout/fragment_add_contact" />
+</navigation>
