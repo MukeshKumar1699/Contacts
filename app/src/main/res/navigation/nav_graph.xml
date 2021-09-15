@@ -43,7 +43,12 @@
         android:id="@+id/displayContactDetailsFragment"
         android:name="com.example.contacts.DisplayContactDetailsFragment"
         android:label="fragment_display_contact_details"
-        tools:layout="@layout/fragment_display_contact_details" />
+        tools:layout="@layout/fragment_display_contact_details" >
+        <argument
+            android:name="contact"
+            app:nullable="false"
+            app:argType="com.example.contacts.Contacts" />
+    </fragment>
     <fragment
         android:id="@+id/addContactFragment"
         android:name="com.example.contacts.AddContactFragment"

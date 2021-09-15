@@ -1,88 +1,61 @@
 package com.example.contacts
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
+@Entity(tableName = "CONTACTS_DB")
+data class Contacts(
 
-@Entity(tableName = "CONTACTS")
-data class Contacts (
+    @ColumnInfo(name = "ContactId")
+    var userId: String,
 
+    @ColumnInfo(name = "ContactName")
+    var name: String?,
+
+    @ColumnInfo(name = "ContactImage")
+    var image: String?,
+
+    ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
-    var userId: Int = 0,
-
-    var name: String? = null,
-
-    @ColumnInfo(name = "contactImage")
-    var image: String? = null,
-
-    @ColumnInfo(name = "phoneList")
-    var phoneList: ArrayList<PhoneDetails> = arrayListOf(),
-
-    @ColumnInfo(name = "emailList")
-    var emailList: ArrayList<EmailDetails> = arrayListOf()
-)
-
-//    @ColumnInfo(name = "company")
-//    val company: String = ""
-//
-//    @ColumnInfo(name = "department")
-//    val department: String = ""
-//
-//    @ColumnInfo(name = "title")
-//    val title: String = ""
-
-//    @ColumnInfo(name = "addressList")
-//    lateinit var addressList: ArrayList<AddressDetails>
-//
-//    @ColumnInfo(name = "website")
-//    val website: String = ""
-//
-//    @ColumnInfo(name = "significantDateList")
-//    lateinit var significantDateList: ArrayList<SignificantDate>
-//
-//    @ColumnInfo(name = "RelationShipList")
-//    lateinit var RelationShipList: ArrayList<RelationShip>
-
-//}
-
-class EmailDetails {
-
-    var mail: String = ""
-    var label: String = ""
+    @ColumnInfo(name = "sNo")
+    var sNo: Int = 0
 }
 
-class PhoneDetails {
 
-    var number: String = ""
-    var label: String = ""
+@Entity(tableName = "PHONE_DB")
+data class PhoneDetails(
 
+    @ColumnInfo(name = "Number")
+    var number: String = "",
+
+    @ColumnInfo(name = "Type")
+    var type: String = "",
+
+    @ColumnInfo(name = "ContactID")
+    var contactId: String
+
+) {
+    @PrimaryKey(autoGenerate = true)
+    var sNo: Int = 0
 }
 
-class AddressDetails {
+@Entity(tableName = "EMAIL_DB")
+data class EmailDetails(
 
-    val address: String = ""
-    val label: String = ""
+    @ColumnInfo(name = "MailID")
+    var mailID: String = "",
 
-}
+    @ColumnInfo(name = "Type")
+    var type: String = "",
 
-class SignificantDate {
+    @ColumnInfo(name = "ContactID")
+    var contactId: String
 
-    val date: String = ""
-    val label: String = ""
-
-}
-
-class RelationShip {
-
-    val relation: String = ""
-    val label: String = ""
-
-}
-
-class Custom {
-
-    val custom: String = ""
-    val label: String = ""
-
+) {
+    @PrimaryKey(autoGenerate = true)
+    var sNo: Int = 0
 }

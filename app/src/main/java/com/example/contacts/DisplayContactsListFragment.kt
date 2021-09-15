@@ -14,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.contacts.databinding.FragmentDisplayContactsListBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
 
@@ -22,7 +25,7 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
     private lateinit var viewModel: DisplayContactsListViewModel
     private var contactsAdapter: ContactsAdapter? = null
 
-    var contactsList = ArrayList<Contacts>()
+    private var contactsList: List<Contacts> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +42,7 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
         init()
         setRecyclerView(contactsList)
         observeLiveData()
+
 
     }
 
@@ -72,8 +76,6 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
 
         viewModel =
             ViewModelProvider(requireActivity()).get(DisplayContactsListViewModel::class.java)
-//            mViewModel = ViewModelProviders.of(this).get(CollabInfoViewModel::class.java)
-
 
         val contentResolver: ContentResolver = requireContext().contentResolver
 
@@ -94,8 +96,14 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
 
                 if (query?.isNotEmpty() == true && query.length > 0) {
 
-//                    viewModel.searchContact(query)
-//                    contactsAdapter!!.updateData(findContactbyName(contactsList, query))
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        contactsList = viewModel.searchContact(contentResolver, query)
+//
+//                        contactsAdapter!!.updateData(
+//                            contactsList as java.util.ArrayList<Contacts>
+//                        )
+//
+//                    }
                 }
                 return false
             }
@@ -105,31 +113,20 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
 
     }
 
-    fun findContactbyName(contactsList: ArrayList<Contacts>, name: String): ArrayList<Contacts> {
-
-        val filteredList = ArrayList<Contacts>()
-        for (contacts in contactsList) {
-
-            if (contacts.name.equals(name)) {
-                filteredList.add(contacts)
-            }
-        }
-        return filteredList
-    }
-
     private fun observeLiveData() {
 
         viewModel.liveData.observe(requireActivity(), {
             Log.d("Display", "observeLiveData: ${it.size}")
             setRecyclerView(it)
-
         })
     }
 
     override fun onItemClicked(position: Int, contacts: Contacts) {
 
-//        val bundle = bundleOf("contacts" to contacts)
-        findNavController().navigate(R.id.action_displayContactsListFragment_to_displayContactDetailsFragment)
+        val action =
+            DisplayContactsListFragmentDirections
+                .actionDisplayContactsListFragmentToDisplayContactDetailsFragment(contacts)
+        findNavController().navigate(action)
 
     }
 
