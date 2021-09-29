@@ -4,25 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DisplayContactsListFragment">
+    tools:context=".fragments.DisplayContactsListFragment">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/sv_searchContact"
+    <include
+        android:id="@+id/toolbar_CL"
+        layout="@layout/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0"
-        android:layoutDirection="rtl"
-        android:padding="10dp"
-        app:defaultQueryHint="Search"
-        app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/rcViewIndex"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_alignParentEnd="true"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/toolbar_CL" />-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcView_displayContactsList"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:scrollbarSize="5dp"
         android:scrollbarThumbVertical="@android:color/darker_gray"
@@ -30,31 +35,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sv_searchContact" />
-
-    <ProgressBar
-        android:id="@+id/pb_Loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar_CL" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/flb_addContact"
-        style="@style/circular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_add_24"
+        android:backgroundTint="@color/colorLBlue"
+        android:src="@drawable/ic_add_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".9"
         app:layout_constraintStart_toStartOf="parent"
-        android:tint="@color/white"
         app:layout_constraintTop_toTopOf="@+id/rcView_displayContactsList"
-        app:layout_constraintVertical_bias=".9"
+        app:layout_constraintVertical_bias=".95"
+        app:shapeAppearanceOverlay="@style/rect"
 
         />
+
+    <ProgressBar
+        android:id="@+id/pb_LoadingCL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

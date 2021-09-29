@@ -12,7 +12,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="searchContact"><![CDATA[Search contacts & places]]></string>
+    <string name="searchContact">Search contacts</string>
     <string name="first_name">First Name</string>
     <string name="namePrefix">Name Prefix</string>
     <string name="middleName">Middle Name</string>
@@ -29,17 +29,22 @@
     <string name="label">Label</string>
     <string name="notes">Notes</string>
     <string name="sip">SIP</string>
-    <string name="save">SAVE</string>
+    <string name="save">Save</string>
     <string name="call">Call</string>
     <string name="text">Text</string>
     <string name="Video">video</string>
+    <string name="search">Search</string>
+    <string name="edit">Edit</string>
+    <string name="create_contact">Create Contact</string>
+    <string name="edit_contact">Edit Contact</string>
+
 
     <string-array name="types">
-        <item>No label</item>
-        <item>Home</item>
-        <item>Work</item>
-        <item>Other</item>
-        <item>Custom</item>
+        <item>HOME</item>
+        <item>MOBILE</item>
+        <item>WORK</item>
+        <item>CUSTOM</item>
+        <item>OTHER</item>
     </string-array>
 
 

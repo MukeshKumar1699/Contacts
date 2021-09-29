@@ -3,6 +3,12 @@
 
     <style name="circular">
         <item name="cornerSize">50%</item>
+        <item name="android:shape">rectangle</item>
     </style>
+
+    <style name="rect" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">25%</item>
+    </style>
+
 
 </resources>
