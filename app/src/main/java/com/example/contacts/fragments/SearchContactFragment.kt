@@ -22,6 +22,7 @@ import com.example.contacts.viewmodels.SearchContactViewModelFactory
 import com.example.contacts.viewmodels.SearchContactsViewModel
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 class SearchContactFragment : Fragment(), ContactsItemClickListener {
 
@@ -52,9 +53,9 @@ class SearchContactFragment : Fragment(), ContactsItemClickListener {
 
     }
 
-    fun updateRecyclerView(searchResultList: ArrayList<Contacts>) {
+    fun updateRecyclerView(searchResultList: List<Contacts>) {
         binding.pbLoadingSC.visibility = View.GONE
-        contactsAdapter.updateData(searchResultList)
+        contactsAdapter.updateData(searchResultList.toCollection(ArrayList()))
     }
 
     private fun setRecyclerView(contactsList: ArrayList<Contacts>) {
@@ -86,7 +87,7 @@ class SearchContactFragment : Fragment(), ContactsItemClickListener {
                     binding.pbLoadingSC.visibility = View.VISIBLE
                     searchResultList.clear()
                     getSearchResult(it)
-                    updateRecyclerView(searchResultList)
+                    updateRecyclerView(searchResultList.toList())
                 }
                 return false
             }
@@ -97,7 +98,7 @@ class SearchContactFragment : Fragment(), ContactsItemClickListener {
                     binding.pbLoadingSC.visibility = View.VISIBLE
                     searchResultList.clear()
                     getSearchResult(it)
-                    updateRecyclerView(searchResultList)
+                    updateRecyclerView(searchResultList.toList())
                 }
 
                 return false
@@ -202,6 +203,6 @@ class SearchContactFragment : Fragment(), ContactsItemClickListener {
         private var emailList: ArrayList<EmailDetails> = ArrayList()
 
 
-        private var searchResultList: ArrayList<Contacts> = ArrayList()
+        private var searchResultList: HashSet<Contacts> = hashSetOf()
     }
 }
