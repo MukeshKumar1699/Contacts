@@ -1,8 +1,10 @@
 package com.example.contacts.fragments
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -22,11 +24,13 @@ import com.example.contacts.EmailDetails
 import com.example.contacts.PhoneDetails
 import com.example.contacts.R
 import com.example.contacts.databinding.FragmentAddContactBinding
+import com.example.contacts.sharedpref.PreferenceHelper
 import com.example.contacts.support.AddContactToContentProvider
 import com.example.contacts.support.AppApplication
 import com.example.contacts.viewmodels.AddContactViewModel
 import com.example.contacts.viewmodels.AddContactViewModelFactory
 import com.google.android.material.textfield.TextInputEditText
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -35,47 +39,15 @@ class AddContactFragment : Fragment() {
 
     private lateinit var addContactToContentProvider: AddContactToContentProvider
 
-    private var imageUri: Uri? = null
+    private var imageUri: Bitmap? = null
+    private val CONTACTID = "CONTACTID"
     lateinit var binding: FragmentAddContactBinding
 
     private val viewModel: AddContactViewModel by viewModels {
         AddContactViewModelFactory((activity?.application as AppApplication).addContactRepository)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate: ")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart: ")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: ")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause: ")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.d(TAG, "onDetach: ")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d(TAG, "onAttach: ")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView: ")
-    }
+    private val sharedPreferences = PreferenceHelper()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,96 +67,141 @@ class AddContactFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
 
-        if (isAddorEditContact.equals("Edit")) {
-            binding.tetName.setText(contact.name)
+        sharedPreferences.getSharedPreference(requireContext())
+        initViews()
 
-            if (!contact.image.equals("null")) {
-                binding.sivContactImage.setImageURI(Uri.parse(contact.image))
+
+    }
+
+    private fun initViews() {
+
+        binding.apply {
+            if (isAddorEditContact.equals("Edit")) {
+                binding.tetName.setText(contact.name)
+
+                if (!contact.image.equals("null")) {
+                    binding.sivContactImage.setImageURI(Uri.parse(contact.image))
+                }
+                for (phoneDetails in phoneNumbersList) {
+                    addPhoneToView(phoneDetails)
+                }
+                for (emailDetails in emailList) {
+                    addEmailToView(emailDetails)
+                }
+
+            } else if (isAddorEditContact.equals("Add")) {
+                binding.tetName.setText("")
+                addPhoneToView(PhoneDetails("", "", ""))
+                addEmailToView(EmailDetails("", "", ""))
             }
-            for (phoneDetails in phoneNumbersList) {
-                addPhoneToView(phoneDetails)
-            }
-            for (emailDetails in emailList) {
-                addEmailToView(emailDetails)
+
+            binding.btnAddPhone.setOnClickListener {
+                addPhoneToView(PhoneDetails("", "", ""))
             }
 
-        } else if (isAddorEditContact.equals("Add")) {
-            binding.tetName.setText("")
-            binding.sivContactImage.setImageDrawable(null)
-            addPhoneToView(PhoneDetails("", "", ""))
-            addEmailToView(EmailDetails("", "", ""))
-        }
+            binding.btnAddEmail.setOnClickListener {
+                addEmailToView(EmailDetails("", "", ""))
+            }
 
-        binding.btnAddPhone.setOnClickListener {
-            addPhoneToView(PhoneDetails("", "", ""))
-        }
+            binding.toolbarAC.tvTitle.apply {
+                visibility = View.VISIBLE
+                if (isAddorEditContact.equals("Add")) text = getString(R.string.create_contact)
+                else if (isAddorEditContact.equals("Edit")) text = getString(R.string.edit_contact)
+            }
 
-        binding.btnAddEmail.setOnClickListener {
-            addEmailToView(EmailDetails("", "", ""))
-        }
+            binding.toolbarAC.ivClose.apply {
+                visibility = View.VISIBLE
+            }.setOnClickListener {
+                findNavController().popBackStack()
+            }
 
-        binding.toolbarAC.tvTitle.apply {
-            visibility = View.VISIBLE
-            if (isAddorEditContact.equals("Add")) text = getString(R.string.create_contact)
-            else if (isAddorEditContact.equals("Edit")) text = getString(R.string.edit_contact)
-        }
+            binding.toolbarAC.ivMore.apply {
+                visibility = View.VISIBLE
+            }
 
-        binding.toolbarAC.ivClose.apply {
-            visibility = View.VISIBLE
-        }.setOnClickListener {
-            findNavController().popBackStack()
-        }
+            binding.sivContactImage.apply { }.setOnClickListener {
 
-        binding.toolbarAC.ivMore.apply {
-            visibility = View.VISIBLE
-        }
+                chooseContactImage()
 
-        binding.sivContactImage.apply { }.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            }
+
+            binding.toolbarAC.tvSave.apply {
+                visibility = View.VISIBLE
+            }.setOnClickListener {
+                if (isAddorEditContact.equals("Add")) {
+
+                    displayToast("Save Clicked")
+                    val name = binding.tipFirstName.editText?.text.toString()
+
+
+                    if (name.isNotEmpty()) {
+
+                        contactId = sharedPreferences.getContactIDUpdatedFromPreference(
+                            requireContext(),
+                            CONTACTID
+                        )
+                            .toString()
+                        contact = Contacts(contactId, name, imageUri.toString())
+                        contact.color = createColor().toString()
+
+                        if (getPhoneNumbersFromView() && getEmailIdFromView()) {
+                            addContactToDB(contact, phoneNumbersList.toList(), emailList.toList())
+                            findNavController().popBackStack()
+                        }
+
+                    } else {
+                        binding.tipFirstName.error = "Name Must not be null"
+                    }
+                } else if (isAddorEditContact.equals("Edit")) {
+
+                    contact.name = binding.tipFirstName.editText?.text.toString()
+
+                    if (contact.name.isNotEmpty()) {
+
+                        phoneNumbersList.clear()
+                        emailList.clear()
+
+                        if (getPhoneNumbersFromView() && getEmailIdFromView()) {
+                            editContact()
+                            findNavController().popBackStack()
+                        }
+
+                    } else {
+                        binding.tipFirstName.error = "Name Must not be Null"
+                    }
+                }
+            }
+        }
+    }
+
+    private fun chooseContactImage() {
+
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        val layoutInflater = layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.image_option,null)
+        alertDialogBuilder.setMessage("Choose option to set contact Image")
+            .setCancelable(false)
+            .setView(dialogView)
+
+        val galleryIcon = dialogView.findViewById<ImageView>(R.id.gallery)
+        val cameraIcon = dialogView.findViewById<ImageView>(R.id.camera)
+
+        val alert = alertDialogBuilder.create()
+        alert.show()
+
+        galleryIcon.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(gallery, PICK_IMAGE)
+            alert.cancel()
+        }
+        cameraIcon.setOnClickListener {
+            val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if(camera.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(camera, CAPTURE_IMAGE)
+                alert.cancel()
+        }
         }
 
-        binding.toolbarAC.tvSave.apply {
-            visibility = View.VISIBLE
-        }.setOnClickListener {
-            if (isAddorEditContact.equals("Add")) {
-
-                displayToast("Save Clicked")
-                val name = binding.tipFirstName.editText?.text.toString()
-
-
-                if (name.isNotEmpty()) {
-
-                    contact = Contacts(contactId, name, imageUri.toString())
-                    contact.color = createColor().toString()
-
-                    if (getPhoneNumbersFromView() && getEmailIdFromView()) {
-                        addContactToDB(contact, phoneNumbersList.toList(), emailList.toList())
-                        findNavController().popBackStack()
-                    }
-
-                } else {
-                    binding.tipFirstName.error = "Name Must not be null"
-                }
-            } else if (isAddorEditContact.equals("Edit")) {
-
-                contact.name = binding.tipFirstName.editText?.text.toString()
-
-                if (contact.name.isNotEmpty()) {
-
-                    phoneNumbersList.clear()
-                    emailList.clear()
-
-                    if (getPhoneNumbersFromView() && getEmailIdFromView()) {
-                        editContact()
-                        findNavController().popBackStack()
-                    }
-
-                } else {
-                    binding.tipFirstName.error = "Name Must not be Null"
-                }
-            }
-        }
     }
 
     private fun getEmailIdFromView(): Boolean {
@@ -237,11 +254,34 @@ class AddContactFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE && data?.data != null) {
-            imageUri = data.data!!
-            binding.sivContactImage.setImageURI(imageUri)
+
+        when(requestCode) {
+
+            PICK_IMAGE -> {
+                if (resultCode == RESULT_OK && requestCode == PICK_IMAGE && data?.data != null) {
+//                    imageUri = data.data
+//                    binding.sivContactImage.setImageURI(imageUri)
+                }
+            }
+            CAPTURE_IMAGE -> {
+                if(resultCode == RESULT_OK && requestCode == CAPTURE_IMAGE && data?.extras != null) {
+                    val bundle = data.extras
+                    imageUri = bundle?.get("data") as Bitmap
+                    binding.sivContactImage.setImageBitmap(imageUri)
+                }
+            }
         }
+
     }
+
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path =
+            MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
+    }
+
 
     fun displayToast(message: String) {
 //        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -251,19 +291,19 @@ class AddContactFragment : Fragment() {
         contacts: Contacts, phoneNumberList: List<PhoneDetails>, emailList: List<EmailDetails>
     ) {
         viewModel.addContact(contacts, phoneNumberList, emailList)
-        contactId = ((contactId.toInt()) + 1).toString()
+        sharedPreferences.writeContactIDUpdateToPreference(requireContext(), CONTACTID, contactId.toInt()+1)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy: ")
         phoneNumbersList.clear()
+        isAddorEditContact = "Add"
         emailList.clear()
     }
-
     private fun observeLiveData() {
 
-        viewModel.getPhoneNumbers(contact.userId).observe(requireActivity(), {
+        viewModel.getPhoneNumbers().observe(requireActivity(), {
             phoneNumbersList.addAll(it)
 
             for (i in phoneNumbersList) {
@@ -272,7 +312,7 @@ class AddContactFragment : Fragment() {
             }
         })
 
-        viewModel.getEmailIDs(contact.userId).observe(requireActivity(), {
+        viewModel.getEmailIDs().observe(requireActivity(), {
             emailList.addAll(it)
 
             for (i in emailList) {
@@ -354,13 +394,20 @@ class AddContactFragment : Fragment() {
         args.contact?.let {
             isAddorEditContact = "Edit"
             contact = it
+            fetchLiveData()
             observeLiveData()
         }
+    }
+
+    private fun fetchLiveData() {
+        viewModel.fetchEmailID(contact.userId)
+        viewModel.fetchPhoneNumber(contact.userId)
     }
 
     companion object {
 
         val PICK_IMAGE: Int = 1
+        val CAPTURE_IMAGE: Int = 2
 
         private lateinit var contact: Contacts
         private var phoneNumbersList: HashSet<PhoneDetails> = hashSetOf()

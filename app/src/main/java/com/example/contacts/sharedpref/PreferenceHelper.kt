@@ -22,4 +22,14 @@ class PreferenceHelper {
         return getSharedPreference(context!!)!!.getBoolean(key, false)
     }
 
+    fun writeContactIDUpdateToPreference(context: Context?, key: String?, value: Int) {
+        val editor = getSharedPreference(context!!)!!.edit()
+        editor.putInt(key, value)
+        editor.apply()
+    }
+
+    fun getContactIDUpdatedFromPreference(context: Context?, key: String?): Int {
+        return getSharedPreference(context!!)!!.getInt(key, 20000)
+    }
+
 }

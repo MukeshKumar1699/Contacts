@@ -133,10 +133,15 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
 
         if (requestCode == REQ_MULTIPLE_PERMISSIONS_CODE) {
 
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+            var isGranted = true
+            for (i in grantResults) {
+                if (i == PackageManager.PERMISSION_DENIED) {
+                    isGranted = false
+                }
+            }
 
+            if(isGranted) {
                 getContactsFromContentProviderAndNotifySharedPref()
-
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -157,7 +162,6 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
             true
         )
     }
-
 
     @SuppressLint("Range", "Recycle")
     private fun initViews() {
@@ -363,7 +367,8 @@ class DisplayContactsListFragment : Fragment(), ContactsItemClickListener {
         private val permissionList = arrayOf(
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
         )
 
         private const val REQ_MULTIPLE_PERMISSIONS_CODE = 100

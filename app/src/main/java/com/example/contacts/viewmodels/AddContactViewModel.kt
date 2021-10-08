@@ -1,21 +1,38 @@
 package com.example.contacts.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.example.contacts.Contacts
 import com.example.contacts.EmailDetails
 import com.example.contacts.PhoneDetails
 import com.example.contacts.repositories.AddContactRepository
+import kotlinx.coroutines.launch
 
 class AddContactViewModel(private val repository: AddContactRepository) : ViewModel() {
 
-    fun getEmailIDs(contactId: String): LiveData<List<EmailDetails>> {
-        return repository.getEmail(contactId)
+    private var emailMLiveData = MutableLiveData<List<EmailDetails>>()
+    private var phoneMLiveData = MutableLiveData<List<PhoneDetails>>()
+
+
+    fun fetchEmailID(contactId: String) {
+        emailMLiveData = repository.getEmail(contactId) as MutableLiveData<List<EmailDetails>>
+
     }
 
-    fun getPhoneNumbers(contactId: String): LiveData<List<PhoneDetails>> {
-        return repository.getPhoneNumbers(contactId)
+    fun fetchPhoneNumber(contactId: String) {
+            phoneMLiveData = repository.getPhoneNumbers(contactId) as MutableLiveData<List<PhoneDetails>>
+
+    }
+
+    fun sample(): Int{
+        return 2
+    }
+
+    fun getEmailIDs(): LiveData<List<EmailDetails>> {
+        return emailMLiveData
+    }
+
+    fun getPhoneNumbers(): LiveData<List<PhoneDetails>> {
+        return phoneMLiveData
     }
 
     fun addContact(
@@ -32,10 +49,6 @@ class AddContactViewModel(private val repository: AddContactRepository) : ViewMo
         emailList: List<EmailDetails>
     ) {
         repository.editContact(contacts, phoneNumberList, emailList)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 
 }

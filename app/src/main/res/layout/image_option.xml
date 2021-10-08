@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@android:color/black"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/gallery"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:src="@drawable/ic_baseline_image_search_24"/>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:id="@+id/camera"
+        android:layout_weight="1"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_outline_add_a_photo_24"/>
+
+
+</LinearLayout>

@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp()
     }
 
-
     companion object {
         private const val TAG = "MainActivity"
     }

@@ -9,6 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts.databinding.ContactsItemBinding
 import com.example.contacts.listeners.ContactsItemClickListener
+import android.graphics.BitmapFactory
+
+
+
 
 
 class ContactsAdapter(
@@ -58,6 +62,11 @@ class ContactsViewHolder(val binding: ContactsItemBinding) : RecyclerView.ViewHo
         this.itemClickListener = itemClickListener
 
         if (!contact.image.equals("null")) {
+            if(contact.name.contains("android.graphics.Bitmap")) {
+                val bitmap = BitmapFactory.decodeFile(contact.image)
+
+                binding.sivContactImage.setImageBitmap(bitmap)
+            }
             binding.sivContactImage.setImageURI(Uri.parse(contact.image))
 
         } else {

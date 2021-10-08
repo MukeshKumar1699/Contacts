@@ -20,33 +20,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun contactsDAO(): ContactsDAO
 
-    private class AppDatabaseCallback(
-        private val scope: CoroutineScope
-    ) : RoomDatabase.Callback() {
-
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { database ->
-                scope.launch {
-                    var wordDao = database.contactsDAO()
-
-//                    // Delete all content here.
-//                    wordDao.deleteAll()
-//
-//                    // Add sample words.
-//                    var word = Word("Hello")
-//                    wordDao.insert(word)
-//                    word = Word("World!")
-//                    wordDao.insert(word)
-//
-//                    // TODO: Add your own words!
-//                    word = Word("TODO!")
-//                    wordDao.insert(word)
-                }
-            }
-        }
-    }
-
 
     companion object {
 

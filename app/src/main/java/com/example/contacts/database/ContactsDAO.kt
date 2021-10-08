@@ -52,9 +52,4 @@ interface ContactsDAO {
     @Query("UPDATE CONTACTS_DB SET ContactName=:name, ContactImage= :image WHERE ContactID= :contactID")
     fun updateContact(contactID: String, name: String?, image: String?)
 
-//    @Query("UPDATE PHONE_DB SET Number= :number, Type= :type WHERE SNo= :sNo")
-//    fun updateContactPhoneNumber(number: String, type: String, sNo: Int)
-//
-//    @Query("UPDATE EMAIL_DB set MailID= :email, Type= :type WHERE SNo= :sNo")
-//    fun updateContactEmail(email: String, type: String, sNo: Int)
 }

@@ -31,6 +31,10 @@
         <entry key="..\:/Users/Mukesh/AndroidStudioProjects/Contacts/app/src/main/res/layout/phone_display_item.xml" value="0.4466666666666667" />
         <entry key="..\:/Users/Mukesh/AndroidStudioProjects/Contacts/app/src/main/res/layout/toolbar_layout.xml" value="0.22" />
         <entry key="..\:/Users/Mukesh/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/activity_list_item.xml" value="0.1490036231884058" />
+        <entry key="app/src/main/res/drawable/ic_outline_add_a_photo_24.xml" value="0.2740740740740741" />
+        <entry key="app/src/main/res/layout/contacts_item.xml" value="0.24003623188405798" />
+        <entry key="app/src/main/res/layout/fragment_add_contact.xml" value="0.1983695652173913" />
+        <entry key="app/src/main/res/layout/image_option.xml" value="0.25" />
       </map>
     </option>
   </component>
